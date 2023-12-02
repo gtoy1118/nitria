@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <%- include('static/header.html', {title: 'Nitria Search'}) %>
+  <body id="searchPage">
+    <%- include('static/symbols.svg') %>
+    <!--div class="mt-3 bg-white position-sticky top-0 z-3">
+      <span class="d-block w-100" style="height:60px">
+        <div class="position-relative w-100" style="height:60px">
+          <div class="z-3 py-1 position-relative w-100">
+            <div class="d-flex justify-content-between">
+              <form class="d-block w-75" role="search" id="search-form">
+                <div class="w-100 container d-flex">
+                  <div class="px-4 py-2" id="logo">
+                    <a href="/" class="text-decoration-none fs-3 text-primary">
+                      Nitria
+                    </a>
+                  </div>
+                  <div class="d-flex py-2 w-100">
+                    <input type="search"
+                      class="flex-grow-1 flex-shrink-0 rounded-start-5 rounded-end-1 px-3 py-2 border border-1 focus-ring"
+                      placeholder="Search" role="searchbox" id="search-input">
+                    <button type="submit"
+                      class="flex-grow-0 flex-shrink-1 rounded-start-1 rounded-end-5 px-3 py-2 border border-1 focus-ring ms-1 bg-white">
+                      <svg viewBox="0 0 19.5 19.5" width="auto" height="16" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M 14.603 15.967 L 10.811 12.17 C 10.427 12.439 10.01 12.641 9.558 12.775 C 9.107 12.91 8.629 12.977 8.126 12.977 C 6.777 12.977 5.627 12.507 4.677 11.567 C 3.725 10.627 3.25 9.481 3.25 8.131 C 3.25 6.781 3.725 5.63 4.677 4.678 C 5.627 3.726 6.777 3.25 8.126 3.25 C 9.475 3.25 10.618 3.726 11.557 4.678 C 12.497 5.63 12.966 6.781 12.966 8.131 C 12.966 8.641 12.902 9.119 12.773 9.565 C 12.645 10.011 12.441 10.416 12.16 10.781 L 15.98 14.634 C 16.169 14.823 16.259 15.047 16.249 15.305 C 16.24 15.564 16.145 15.785 15.963 15.967 C 15.774 16.155 15.547 16.25 15.283 16.25 C 15.019 16.25 14.792 16.155 14.603 15.967 Z M 8.126 11.025 C 8.929 11.025 9.611 10.743 10.173 10.181 C 10.735 9.618 11.016 8.935 11.016 8.131 C 11.016 7.316 10.738 6.624 10.182 6.055 C 9.626 5.487 8.941 5.203 8.126 5.203 C 7.311 5.203 6.62 5.487 6.052 6.055 C 5.484 6.624 5.201 7.316 5.201 8.131 C 5.201 8.947 5.484 9.633 6.052 10.189 C 6.62 10.746 7.311 11.025 8.126 11.025 Z"
+                          fill="currentcolor" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </span>
+    </div>
+    <div class="mb-3" style="padding-inline-start: 8.25rem;">
+      <ul class="nav nav-pills" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active px-3 py-2 rounded-3 me-1" id="web-tab" data-bs-toggle="tab"
+            data-bs-target="#web-tab-pane" type="button" role="tab" aria-controls="web-tab-pane"
+            aria-selected="true">Web</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link px-3 py-2 rounded-3 me-1" id="image-tab" data-bs-toggle="tab"
+            data-bs-target="#image-tab-pane" type="button" role="tab" aria-controls="image-tab-pane"
+            aria-selected="false">Image</button>
+        </li>
+      </ul>
+    </div>
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="web-tab-pane" role="tabpanel" aria-labelledby="web-tab" tabindex="0">
+        <div id="appBar" class="position-relative w-100 border-top" style="height:48px">
+          <div class="container">
+            <div class="position-relative" height="48px">
+              <div class="d-flex justify-content-between position-absolute top-0 left-0 text-secondary"
+                style="line-height: 48px;" id="">
+                <div id="appBarContent" class="overflow-hidden" style="line-height: 48px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="search-results-web" class="mt-3 container"></div>
+      </div>
+      <div class="tab-pane fade border-top" id="image-tab-pane" role="tabpanel" aria-labelledby="image-tab" tabindex="0">
+        <div class="d-block h-100 position-relative text-nowrap align-top" style="width: calc(100vw - 610px)">
+          <div class="text-wrap align-top position-relative mt-2 d-inline-block px-4">
+            <div>
+              <div class="d-inline">
+                <div>
+                  <div>
+                    <div>
+                      <span>
+                        <div class="w-100">
+                          <div id="search-results-image"></div>
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div-->
+
+    <nav class="search-nav">
+      <form id="search-form" class="search-form">
+        <div>
+          <div class="search-logo">
+            <a href="/">
+              <svg width="92"style="height:22px">
+                <use href="#brand"/>
+              </svg>
+            </a>
+          </div>
+          <div class="search-box">
+            <input type="search" class="search-box-input" id="search-input" role="searchbox" name="q" placeholder="Search">
+            <button type="submit" class="search-box-submit" role="button">
+              <svg width="20" height="20">
+                <use href="#search"></use>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </form>
+    </nav>
+    <div class="search-result-nav-container">
+      <nav class="search-result-nav">
+        <div class="search-result-filters-container">
+          <div class="search-result-filters" role="navigation">
+            <div class="search-result-filters-content">
+              <a class="search-result-filter active" id="web-tab" data-bs-toggle="tab" data-bs-target="#web-tab-pane" type="button" role="tab" aria-controls="web-tab-pane" aria-selected="true"><span>Web</span></a>
+              <a class="search-result-filter" id="image-tab" data-bs-toggle="tab" data-bs-target="#image-tab-pane" type="button" role="tab" aria-controls="image-tab-pane" aria-selected="true"><span>Web</span></a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <script src="search.js"></script>
+  </body>
+</html>

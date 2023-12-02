@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <%- include('static/header.html', {title: title}) %>
+  <body id="homePage">
+    <%- include('static/symbols.svg') %>
+    <div class="search">
+      <form action="/search" id="search-form" class="search-form" role="search" method="get">
+        <div class="search-logo">
+          <svg class="search-logo-svg">
+            <use href="#brand"/>
+          </svg>
+        </div>
+        <div class="search-box">
+          <input type="search" class="search-box-input" id="search-input" role="searchbox" name="q" placeholder="Search">
+          <button type="submit" class="search-box-submit" role="button">
+            <svg width="20" height="20">
+              <use href="#search"></use>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

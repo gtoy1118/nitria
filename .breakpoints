@@ -1,0 +1,26 @@
+{
+  "files": {
+    "views/search.ejs": [
+      {
+        "id": "ec4cc53e-03da-49ab-ae9f-02272107216a",
+        "line": 1,
+        "version": 688,
+        "index": 0
+      }
+    ],
+    "views/src/style.css": [
+      {
+        "id": "cf7d0eee-fe1a-4f09-88e7-004db1113057",
+        "line": 121,
+        "version": 3224,
+        "index": 2060
+      },
+      {
+        "id": "bdb70b9c-f6e7-46f4-9e05-6454eb57f5ca",
+        "line": 457,
+        "version": 3224,
+        "index": 8543
+      }
+    ]
+  }
+}
