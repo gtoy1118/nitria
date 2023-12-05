@@ -1,0 +1,270 @@
+can you help me brainstorm how to break this up into modules: 
+var dataWeb;
+var dataImg;
+var definition;
+var definitions = ["a", "aa", ...];
+
+var process = {
+  env: {
+    "GOOGLE_API_KEY": "AIzaSyA1e0lrkRqcrxYwlWh3l-rmyzoUkaJYE7A",
+    "SEARCH_ENGINE_ID": "358cf9850bd4b44bb",
+    "TEST_URL": "https://www.googleapis.com/customsearch/v1?key=AIzaSyA1e0lrkRqcrxYwlWh3l-rmyzoUkaJYE7A&cx=358cf9850bd4b44bb&q=hi"
+  }
+}
+
+function isDefinable(word) {
+  if (!/\w+/.test(word)) {
+    return false;
+  }
+
+  return definitions.includes(word);
+}
+
+$('#audioButton').click(function(event) {
+  const audio = new Audio(event.target.attr("audioFile"));
+  console.log(audio);
+  audio.play();
+});
+
+$(document).ready(function() {
+  var query = getParameterByName('q');
+  var start = getParameterByName('start');
+  if (start == "") {
+    start = 1;
+  }
+  if (query !== '') {
+    $('#search-input').val(query);
+    search(query, start);
+  }
+
+  $('#search-form').on('submit', function(event) {
+    event.preventDefault();
+    var query = $('#search-input').val();
+    search(query, start);
+  });
+});
+
+function search(query, start) {
+  var apiKey = process.env['GOOGLE_API_KEY'];
+  var cx = process.env['SEARCH_ENGINE_ID']
+  var urlWeb = 'https://www.googleapis.com/customsearch/v1?key=' + apiKey + '&cx=' + cx + '&q=' + query + '&start=' + start;
+  urlWeb = 'https://nitriaold-2.gtoy118.repl.co/search-test.json';
+  var urlImage = 'https://www.googleapis.com/customsearch/v1?key=' + apiKey + '&cx=' + cx + '&searchType=image&q=' + query + '&start=' + start;
+  urlImage = 'https://nitriaold-2.gtoy118.repl.co/search-test-image.json'
+
+  $.ajax({
+    url: urlWeb,
+    dataType: 'json',
+    success: function(data) {
+      showResultsWeb(data.items, data.spelling, data, query);
+      dataWeb = data;
+    }
+  });
+
+  $.ajax({
+    url: urlImage,
+    dataType: 'json',
+    success: function(data) {
+      showResultsImage(data.items, data.spelling, data);
+      dataImg = data;
+    }
+  });
+
+  updateURL(query, start);
+}
+
+/*
+Definition:
+  "Dictionary"
+  Header:
+    *Pronunciation Audio*
+    Word Data:
+      Word
+      Phonetic
+  Meanings:
+    each Meaning:
+      Part of Speech
+      Definitions:
+        each Definition:
+          Definition
+          Example
+
+<div class="search-definition-container">
+  <span class="dictionary-title">Dictionary</div>
+  <div class="search-definition-header">
+    <button class="search-definition-header-button" *onclick*>
+      *svg*
+
+  </div>
+*/
+
+function showDefinition(data) {
+  var button = "";
+  var meanings = data[0].meanings;
+  var meaningsHtml = "";
+
+  for (var i = 0; i < meanings.length; i++) {
+    meaning = meanings[i];
+
+    posHtml = `<div class="search-definition-meaning-pos">${meaning.partOfSpeech}</div>`;
+    definitionsHtml = "";
+    for (var j = 0; j < meaning.definitions.length; j++) {
+      definition = meaning.definitions[j];
+      definitionsHtml += `<div class="search-definition-meaning-defenition-container"><div class="search-definition-meaning-definition">${definition.definition}</div>`;
+      if (definition.example) {
+        definitionsHtml += `<div class="search-definition-meaning-example">&quot;${definition.example}&quot;</div>`;
+      }
+      definitionsHtml += `</div>`;
+    }
+
+    meaningsHtml += `<div class="search-definition-meaning">${posHtml}${definitionsHtml}</div>`
+  }
+
+  if (data[0].phonetics[0].audio) {
+    button = `<button onclick="playAudioFromLink('${data[0].phonetics[0].audio}')" class="search-definition-audio-btn" id="audioButton">
+      <svg width="24" height="24">
+        <use href="#audio"/>
+      </svg>
+    </button>`;
+  }
+
+  var definitionHtml = `
+<div class="search-definition">
+  Dictionary
+  <div class="search-definition-header">
+    ${button}
+    <div class="search-definition-word">${data[0].word} <span class="search-definition-phonetic">${data[0].phonetic}</span></div>
+  </div>
+  <div class="search-definition-meanings">
+    ${meaningsHtml}
+  </div>
+</div>`;
+
+  $('#searchDefinitionContainer').html(definitionHtml);
+}
+
+function playAudioFromLink(link) {
+  const audio = new Audio(link);
+  audio.play()
+}
+
+function showResultsWeb(results, spelling, all, query) {
+  var html = '';
+  var resultStats = `About ${all.searchInformation.formattedTotalResults} results in ${all.searchInformation.formattedSearchTime} seconds.`;
+  $('#result-stats').html(resultStats);
+
+  if (spelling) {
+    query = spelling.correctedQuery;
+  }
+
+  if (isDefinable(query)) {
+    $.ajax({
+      url: 'https://api.dictionaryapi.dev/api/v2/entries/en/' + query,
+      dataType: 'json',
+      success: function(data) {
+        showDefinition(data);
+      }
+    });
+  } else {
+    $('#searchDefinitionContainer').html("");
+  }
+
+  for (var i = 0; i < results.length; i++) {
+    var result = results[i];
+    var img = { link: "" };
+    if (result.pagemap.cse_image) {
+      img.link = result.pagemap.cse_image[0].src;
+    }
+
+    html += `
+<div class="search-result">
+  <a class="search-result-header" href="${result.link}">
+    <img src="${img.link}" alt="" class="search-result-thumb-img">
+    <span class="search-result-url">${result.htmlFormattedUrl}</span>
+  </a>
+  <h4 class="search-result-title"><a href="${result.link}">${result.htmlTitle}</a></h4>
+  <p class="search-result-snippet">
+    ${result.htmlSnippet}
+  </p>
+</div>`;
+  }
+  $('#searchResults').html(html);
+}
+
+// <div class=\"d-block fs-sm\" style=\"flex:0 0 auto\"><span><a href=\"${result.link}\"><br><h3 class=\"mt-3 pt-1 mb-1\">${result.htmlTitle}</h1></a></span></div>
+
+function showResultsImage(results, spelling, all) {
+  var html = '';
+  for (var i = 0; i < results.length; i++) {
+    var result = results[i];
+    html += `<div class=\"me-4 mb-4 d-inline-block position-relative\">
+  <a style=\"height:300px\" class=\"overflow-hidden position-relative border d-block rounded-2\" role=\"button\" onclick="updateSelectedImg(${result})">
+    <img class=\"h-100 w-100\" src=\"${result.link}\" id=\"imgImg\" imgID="${i}"></img>
+  </a>
+  <a class=\"px-1 mt-1 d-inline-block position-relative text-decoration-none\" href=\"${result.image.contextLink}\">
+    <div class=\"d-flex align-items-center text-nowrap overflow-hidden text-body-secondary\" style=\"height:16px;font-size:12px,line-height:16px;\">
+      <div class=\"text-nowrap overflow-hidden flex-grow-0 flex-shrink-1\">${result.displayLink}</div>
+    </div>
+    <div class=\"overflow-hidden text-nowrap text-body\" aria-label=\"${result.title}\">${result.htmlTitle}</div>
+  </a>
+</div>
+`;
+  }
+  $('#search-results-image').html(html);
+}
+
+function updateURL(query, start) {
+  var urlBase = window.location.href.split('?')[0];
+  if (urlBase == "https://nitria.gtoy118.repl.co/") {
+    var url = window.location.href.split('?')[0] + 'search?q=' + encodeURIComponent(query) + '&start=' + start;
+    window.open(url, '_self');
+  } else {
+    var url = window.location.href.split('?')[0] + '?q=' + encodeURIComponent(query) + '&start=' + start;
+    window.history.pushState({ path: url }, '', url);
+  }
+}
+
+function getParameterByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, '\\$&');
+  var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+    results = regex.exec(url);
+  if (!results) return '';
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+function updateSelectedImg(result) {
+  $('#imgResultView').toggleClass('hide');
+  $('#imgResultViewMaster').html(`
+<div class="d-flex flex-shrink-0 position-relative" style="max-height:calc(100% - 241px)">
+  <div class="z-3 d-flex flex-column mx-auto w-100 flex-grow-1 flex-shrink-1 justify-content-start align-items-center">
+    <a class="d-flex h-100 w-100 flex-grow-1 flex-shrink-1 position-relative flex-column align-items-center" href="${result.image.contextLink}">
+      <img class="flex-grow-1 flex-shrink-1 object-fit-contain w-100 h-auto" src="${result.link}">
+    </a>
+  </div>
+</div>
+`);
+}
+
+const searchNav = document.querySelector('.search-nav');
+const listenerSetion = document.querySelector('.search-result-nav-container');
+
+const listenerSetionOptions = {
+  rootMargin: '-20px 0px 0px 0px'
+};
+
+const listenerSetionObserver = new IntersectionObserver(function(entries) {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) {
+      $(searchNav).addClass("scrolled");
+      $(searchNav).slideDown();
+    } else {
+      $(searchNav).removeClass("scrolled");
+      $(searchNav).slideUp(0);
+      $(searchNav).slideDown(0);
+    }
+  });
+}, listenerSetionOptions);
+
+listenerSetionObserver.observe(listenerSetion);
