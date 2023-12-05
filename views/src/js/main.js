@@ -1,14 +1,6 @@
 import * as process from './process.js';
 import * as audio from './audio.js';
-var definition;
-
-function isDefinable(word) {
-  if (!/\w+/.test(word)) {
-    return false;
-  }
-
-  return definitions.includes(word);
-}
+import * as definitions from './definitions.js';
 
 $(document).ready(function() {
   var query = getParameterByName('q');
